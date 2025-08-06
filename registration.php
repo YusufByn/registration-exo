@@ -1,15 +1,52 @@
 <?php
-// condition pour vérifier si on a recu une request en post (formulaire)
+// créer un tableau vide errors au dessus du if psk ca fait une request POST, si ca arrive depuis le get il va pas capter
+$errors = [];
 
+// condition pour vérifier si on a recu une request en post (formulaire)
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $formName = htmlspecialchars(trim($_POST["name"] ?? ""));
     $formLastName = htmlspecialchars(trim($_POST["lastname"] ?? ""));
-    $formeEmail = htmlspecialchars(trim($_POST["email"] ?? ""));
+    $formEmail = htmlspecialchars(trim($_POST["email"] ?? ""));
     $formPassword = htmlspecialchars(trim($_POST["password"] ?? ""));
     $formConfirmPassword = htmlspecialchars(trim($_POST["confirm_password"] ?? ""));
+
+// validation du prénom
+if (empty($formName)) {
+        $errors[] = "Le prénom est obligatoire.";
+        // si le prénom est vide tu dis ca
+    }elseif (strlen($formName) < 2) {
+        $errors[] = "Le prénom doit avoir minimum 2 caractères !";
+        // si le prénom fait moins de 2 carac tu dis ca
+    }elseif (strlen($formName) > 255) {
+        $errors[] = "Le prénom doit avoir maximum 255 caractères !";
+        // si le prénom fait plus que 255 tu dis ca
+    }
+
+if (empty($formLastName)) {
+        $errors[] = "le nom est obligatoire";
+        // si nom est vide
+    }elseif (strlen($formLastName) < 2) {
+        $errors[] = "Le nom doit avoir minimum 2 caractères !";
+        // si nom a moins de 2 caract tu dis ca
+    }elseif (strlen($formLastName) > 255) {
+        $errors[] = "Le nom doit avoir maximum 255 caractères !";
+        // si nom a plus de 255 caract tu dis ca
+    }
+
+if (empty($formEmail)) {
+        $errors[] = "l'email est obligatoire";
+    }elseif ()
+
+if (empty($formPassword)) {
+    $errors[] = "le mot de passe est obligatoire";
+}
+if (empty($formConfirmPassword)) {
+    $errors[] = "la confirmation est obligatoire";
 }
 
-var_dump($_POST);
+
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -44,6 +81,11 @@ var_dump($_POST);
 
                 <input type="submit" value="Submit">
             </form>
+        </section>
+        <section class="messagesContainer">
+            <h3>Test</h3>
+            <div>
+            </div>
         </section>
     </main>
     <footer>

@@ -13,7 +13,7 @@ footer {
     padding: 40px;
     display: flex;
     justify-content: center;
-    background-color: rgb(60, 109, 151);
+    background-color: rgb(40, 120, 190);
     color: white;
 }
 
@@ -32,11 +32,19 @@ form {
     padding: 30px;
     border: 1px solid rgb(rgb(206, 206, 206));
     border-radius: 10px;
-    background-color: rgb(60, 109, 151);
+    background-color: rgb(40, 120, 190);
     color: rgb(255, 255, 255);
 }
 
 input {
     padding: 10px;
     margin: 10px;
+}
+
+.messagesContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(40, 120, 190);
+    color: white;
 }
