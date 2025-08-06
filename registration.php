@@ -56,7 +56,9 @@ if (empty($formPassword)) {
 
     // validation de la confirmation du mot de passe
 if (empty($formConfirmPassword)) {
-        $errors[] = "la confirmation est obligatoire";
+        $errors[] = "la confirmation du mot de passe est obligatoire";
+    }elseif ($formConfirmPassword ) {
+        
     }
 
 
@@ -79,6 +81,13 @@ if (empty($formConfirmPassword)) {
     <main>
         <section class="formContainer">
             <form action="" method="POST">
+                <?php
+                
+                foreach ($errors as $error) {
+                    echo $error
+                }
+
+                ?>
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name" placeholder="Enter your name">
 
