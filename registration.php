@@ -35,8 +35,10 @@ if (empty($formLastName)) {
 
 if (empty($formEmail)) {
         $errors[] = "l'email est obligatoire";
+        // si le mail n'est pas indiqué donc vide tu dis ca
     }elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "votre adresse ne correspond pas au format mail classique !";
+        // ! psk > si la variable mail n'est pas filtré, alors tu dis ca
     }
 
 if (empty($formPassword)) {
