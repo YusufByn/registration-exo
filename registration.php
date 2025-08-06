@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $formPassword = htmlspecialchars(trim($_POST["password"] ?? ""));
     $formConfirmPassword = htmlspecialchars(trim($_POST["confirm_password"] ?? ""));
 
-// validation du prénom
+    // validation du prénom
 if (empty($formName)) {
         $errors[] = "Le prénom est obligatoire.";
         // si le prénom est vide tu dis ca
@@ -22,6 +22,7 @@ if (empty($formName)) {
         // si le prénom fait plus que 255 tu dis ca
     }
 
+    // validation du nom
 if (empty($formLastName)) {
         $errors[] = "le nom est obligatoire";
         // si nom est vide
@@ -33,6 +34,7 @@ if (empty($formLastName)) {
         // si nom a plus de 255 caract tu dis ca
     }
 
+    // validation du mail
 if (empty($formEmail)) {
         $errors[] = "l'email est obligatoire";
         // si le mail n'est pas indiqué donc vide tu dis ca
@@ -41,12 +43,21 @@ if (empty($formEmail)) {
         // ! psk > si la variable mail n'est pas filtré, alors tu dis ca
     }
 
+    // validation du mot de passe
 if (empty($formPassword)) {
-    $errors[] = "le mot de passe est obligatoire";
-}
+        $errors[] = "le mot de passe est obligatoire";
+    }elseif (strlen($formPassword) < 3) {
+        $errors[] = "le mot de passe doit contenir au moins 3 caractères !"
+        // si mdp est inférieur à 3 caract tu dis ca
+    }elseif ($formPassword !== $formConfirmPassword) {
+        $errors[] = "les mots de passe doivent être identiques !"
+        // si mot de passe est strictement pas égal à confirm mdp, tu dis que ca doit etre identique!
+    }
+
+    // validation de la confirmation du mot de passe
 if (empty($formConfirmPassword)) {
-    $errors[] = "la confirmation est obligatoire";
-}
+        $errors[] = "la confirmation est obligatoire";
+    }
 
 
 }
