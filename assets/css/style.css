@@ -44,7 +44,10 @@ input {
 .messagesContainer {
     display: flex;
     justify-content: center;
-    align-items: center;
     background-color: rgb(40, 120, 190);
+    width: 30%;
+    border-radius: 10px;
     color: white;
+    margin: 0px 400px 10px 420px;
+    padding: 30px;
 }

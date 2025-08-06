@@ -1,4 +1,7 @@
 <?php
+
+require_once "config/database.php";
+
 // créer un tableau vide errors au dessus du if psk ca fait une request POST, si ca arrive depuis le get il va pas capter
 $errors = [];
 
@@ -38,7 +41,7 @@ if (empty($formLastName)) {
 if (empty($formEmail)) {
         $errors[] = "l'email est obligatoire";
         // si le mail n'est pas indiqué donc vide tu dis ca
-    }elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    }elseif (!filter_var($formEmail, FILTER_VALIDATE_EMAIL)) {
         $errors[] = "votre adresse ne correspond pas au format mail classique !";
         // ! psk > si la variable mail n'est pas filtré, alors tu dis ca
     }
@@ -47,10 +50,10 @@ if (empty($formEmail)) {
 if (empty($formPassword)) {
         $errors[] = "le mot de passe est obligatoire";
     }elseif (strlen($formPassword) < 3) {
-        $errors[] = "le mot de passe doit contenir au moins 3 caractères !"
+        $errors[] = "le mot de passe doit contenir au moins 3 caractères !";
         // si mdp est inférieur à 3 caract tu dis ca
     }elseif ($formPassword !== $formConfirmPassword) {
-        $errors[] = "les mots de passe doivent être identiques !"
+        $errors[] = "les mots de passe doivent être identiques !";
         // si mot de passe est strictement pas égal à confirm mdp, tu dis que ca doit etre identique!
     }
 
@@ -61,6 +64,14 @@ if (empty($formConfirmPassword)) {
         
     }
 
+if (empty($errors)) {
+    // ajouter les éléments en base de donnée
+    try {
+        
+    } catch () {
+        
+    }
+    }
 
 }
 
@@ -71,7 +82,7 @@ if (empty($formConfirmPassword)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
     <title>Document</title>
 </head>
 <body>
@@ -81,13 +92,6 @@ if (empty($formConfirmPassword)) {
     <main>
         <section class="formContainer">
             <form action="" method="POST">
-                <?php
-                
-                foreach ($errors as $error) {
-                    echo $error
-                }
-
-                ?>
                 <label for="name">Name</label>
                 <input type="text" name="name" id="name" placeholder="Enter your name">
 
@@ -109,6 +113,13 @@ if (empty($formConfirmPassword)) {
         <section class="messagesContainer">
             <h3>Test</h3>
             <div>
+                <?php
+                
+                foreach ($errors as $error) {
+                    echo $error;
+                }
+
+                ?>
             </div>
         </section>
     </main>
