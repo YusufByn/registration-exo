@@ -4,14 +4,15 @@ require_once "config/database.php";
 
 // créer un tableau vide errors au dessus du if psk ca fait une request POST, si ca arrive depuis le get il va pas capter
 $errors = [];
+$message = "";
 
 // condition pour vérifier si on a recu une request en post (formulaire)
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $formName = htmlspecialchars(trim($_POST["name"] ?? ""));
     $formLastName = htmlspecialchars(trim($_POST["lastname"] ?? ""));
     $formEmail = htmlspecialchars(trim($_POST["email"] ?? ""));
-    $formPassword = htmlspecialchars(trim($_POST["password"] ?? ""));
-    $formConfirmPassword = htmlspecialchars(trim($_POST["confirm_password"] ?? ""));
+    $formPassword = trim($_POST["password"] ?? "");
+    $formConfirmPassword = trim($_POST["confirm_password"] ?? "");
 
     // validation du prénom
 if (empty($formName)) {
@@ -57,24 +58,35 @@ if (empty($formPassword)) {
         // si mot de passe est strictement pas égal à confirm mdp, tu dis que ca doit etre identique!
     }
 
-    // validation de la confirmation du mot de passe
-if (empty($formConfirmPassword)) {
-        $errors[] = "la confirmation du mot de passe est obligatoire";
-    }elseif ($formConfirmPassword ) {
-        
-    }
-
 if (empty($errors)) {
-    // ajouter les éléments en base de donnée
-    try {
-        
-    } catch () {
-        
-    }
-    }
+    //logique de traitement en db
+    $pdo = dbConnexion();
 
-}
+    //verifier si l'adresse mail est utilisé ou non
+    $checkEmail = $pdo->prepare("SELECT id FROM users WHERE email = ?");
 
+    // la méthode execute de mon objet pdo execute la request préparée
+    $checkEmail->execute([$formEmail]);
+     
+    //une condition pour vérifier si je recupere quelque chose
+    if ($checkEmail->rowCount() > 0) {
+        $errors[] = "email déja utilisé";
+        } else {
+        //dans le cas ou tout va bien ! email pas utilisé
+
+        //hashage du mdp
+        $hashPassword = password_hash($formPassword, PASSWORD_DEFAULT);
+
+        // insertion des données en db
+        $insertUser = $pdo->prepare("INSERT INTO users (name, lastname, email, password) 
+        VALUES (?, ?, ?, ?)");
+
+        $insertUser->execute([$formName, $formLastName, $formEmail, $hashPassword]);
+
+        $message = "$formName $formLastName vous êtes enregistré avec succès";
+        }
+    }
+};
 ?>
 
 <!DOCTYPE html>
@@ -111,12 +123,15 @@ if (empty($errors)) {
             </form>
         </section>
         <section class="messagesContainer">
-            <h3>Test</h3>
             <div>
+                <h3>Test</h3>
                 <?php
                 
                 foreach ($errors as $error) {
                     echo $error;
+                }
+                if (!empty($message)) {
+                    echo $message;
                 }
 
                 ?>
