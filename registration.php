@@ -120,6 +120,8 @@ if (empty($errors)) {
                 <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password">
 
                 <input type="submit" value="Submit">
+
+                <a href=login.php>Déjà inscrit ?</a>
             </form>
         </section>
         <section class="messagesContainer">

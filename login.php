@@ -2,6 +2,7 @@
 
 require_once "config/database.php";
 
+session_start();
 // créer un tableau vide errors au dessus du if psk ca fait une request POST, si ca arrive depuis le get il va pas capter
 $errors = [];
 $message = "";
@@ -31,29 +32,46 @@ if (empty($loginPassword)) {
     }
 
 if (empty($errors)) {
-    //appel de la fonction de connexion de la db
-    $pdo = dbConnexion();
+    try {
+        //appel de la fonction de connexion de la db
+        $pdo = dbConnexion();
 
-    //chercher l'utilisateur par son mail ainsi que son mdp, je peux pas faire email = variable psk niveau secu c nul
-    // je veux faire une requête avec un paramètre (le ?) mais je ne donne pas encore la valeur
-    $userEmailPassword = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+        //chercher l'utilisateur par son mail ainsi que son mdp, je peux pas faire email = variable psk niveau secu c nul
+        // je veux faire une requête avec un paramètre (le ?) mais je ne donne pas encore la valeur
+        $userEmailPassword = $pdo->prepare("SELECT * FROM users WHERE email = ?");
 
-    // Exécute cette requête, et remplace le ? par ce que contient la variable login
-    // en gros je vérifie l'email
-    $userEmailPassword->execute([$loginEmail]);
+        // Exécute cette requête, et remplace le ? par ce que contient la variable login
+        // en gros je vérifie l'email
+        $userEmailPassword->execute([$loginEmail]);
 
-    $user = $userEmailPassword->fetch(); 
-    // ici tu récupères les infos utilisateur
+        $user = $userEmailPassword->fetch(); 
+        // ici tu récupères les infos utilisateur
+    
 
-      if ($user) {
-            // Vérifie le mot de passe hashé avec la fonction password_verify ou plutot une methode
-            if (password_verify($loginPassword, $user["password"])) {
-                var_dump("Connexion réussie, bienvenue !");
+    if ($user) {
+                //verification
+                    if (password_verify($loginPassword, $user["password"])) {
+                        $_SESSION["user_id"] = $user['id'];
+                        $_SESSION["name"] = $user["name"];
+                        $_SESSION["lastname"] = $user["lastname"];
+                        $_SESSION["email"] = $user["email"];
+                        $_SESSION['loggin'] = true;
+
+                        $message = "super vous etes connecté " . htmlspecialchars($user['name']);
+                        header('location: home.php');
+                        exit();
+                    }else{
+                        $errors[] = "mot de passe pas bon ma gueule";
+                    }     
+                }else{
+                    $errors[] = "compte introuvable ma gueule";
+                }  
+            } catch (PDOException $e) {
+                $errors[] = "nous avons des problemes ma gueule: " . $e->getMessage();
             }
         }
-
-    }
 }
+        
 ?>
 
 
@@ -78,7 +96,9 @@ if (empty($errors)) {
                 <label for="password">Mot de passe :</label>
                 <input type="password" name="password" placeholder="Entrez votre mot de passe">
 
-                <button type="submit">Se connecter</button>
+                <input type="submit" value="Se connecter">
+
+                <a href=registration.php>Retourner sur la page d'enregistrement</a>
             </form>
         </section>
     </main>
